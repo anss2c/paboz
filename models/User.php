@@ -19,7 +19,7 @@ class User extends UserIdentity
     const STATUS_ACTIVE   = 10;
     const STATUS_INACTIVE = 1;
     const STATUS_DELETED  = 0;   
-
+   
     /**
      * List of names for each status.
      * @var array
@@ -48,6 +48,9 @@ class User extends UserIdentity
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
             ['status', 'required'],
+            ['rememberMe', 'boolean'],
+            ['password_hash', 'required'],
+            ['password_hash', 'string', 'min' => 2, 'max' => 255],
         ];
     }
 
@@ -73,7 +76,7 @@ class User extends UserIdentity
         return [
             'id' => Yii::t('app', 'ID'),
             'username' => Yii::t('app', 'Username'),
-            'password' => Yii::t('app', 'Password'),
+            'password_hash' => Yii::t('app', 'Password'),
             'email' => Yii::t('app', 'Email'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -191,6 +194,7 @@ class User extends UserIdentity
     /**
      * Generates new account activation token.
      */
+     
     public function generateAccountActivationToken()
     {
         $this->account_activation_token = Yii::$app->security->generateRandomString() . '_' . time();
@@ -202,5 +206,12 @@ class User extends UserIdentity
     public function removeAccountActivationToken()
     {
         $this->account_activation_token = null;
+    }
+     public function getPassword()
+
+    {
+
+        return '';
+
     }
 }

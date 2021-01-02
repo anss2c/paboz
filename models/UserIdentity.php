@@ -28,6 +28,8 @@ use Yii;
 class UserIdentity extends ActiveRecord implements IdentityInterface
 {
     public $consumer;
+    public $rememberMe = true;
+    private $_user = false;
     /**
      * Declares the name of the database table associated with this AR class.
      *
@@ -115,9 +117,13 @@ class UserIdentity extends ActiveRecord implements IdentityInterface
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
+        //AccessToken::generateAuthKey($this);
+    }
+    public function generateAccessToken()
+    {
+       // $this->auth_key = Yii::$app->security->generateRandomString();
         AccessToken::generateAuthKey($this);
     }
-
     /**
      * Validates password.
      *
@@ -128,7 +134,7 @@ class UserIdentity extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->getSecurity()->validatePassword($password, $this->password_hash);
     }
 
     /**
@@ -142,6 +148,26 @@ class UserIdentity extends ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+    public function login()
+    {
+        if ($this->validate()) {
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+        }
+        return false;
+    }
+    public function getUser()
+    {
+        if ($this->_user === false || $this->_user == null) {
+//        print_r($this);
+        //echo 'aaaaa'.Yii::$app->request->post('username');
+            $this->_user = User::findByUsername( Yii::$app->request->post('username'));
+           // if($this->_user==null)
+           // return "ffffffff";
+                //exit();
+        }
+
+        return $this->_user;
     }
 
 }

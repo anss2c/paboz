@@ -42,6 +42,7 @@ AppAsset::register($this);
             ['label' => 'Daftar Kendaraan', 'url' => ['/kendaraan']],
             ['label' => 'Daftar Transaksi', 'url' => ['/transaksi']],
 			['label' => 'Daftar Karyawan', 'url' => ['/karyawan']],
+            /*
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -54,6 +55,18 @@ AppAsset::register($this);
                 . Html::endForm()
                 . '</li>'
             )
+            */
+            
+           
+                '<li>'
+                . Html::beginForm(['/site/logout'], 'post')
+                . Html::submitButton(
+                    'Logout ',
+                    ['class' => 'btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>'
+            
         ],
     ]);
     NavBar::end();
